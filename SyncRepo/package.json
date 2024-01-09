@@ -1,0 +1,35 @@
+{
+  "name": "syncrepo",
+  "version": "1.0.0-n",
+  "main": "log.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node synrepo.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@ngrok/ngrok": "^0.9.1",
+    "@octokit/action": "^6.0.7",
+    "@octokit/graphql": "^7.0.2",
+    "@octokit/rest": "^20.0.2",
+    "@octokit/webhooks": "^12.0.10",
+    "@types/express": "^4.17.21",
+    "adm-zip": "^0.5.10",
+    "axios": "^1.6.3",
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0",
+    "promise": "^8.3.0",
+    "simple-git": "^3.21.0"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
+    "@types/node": "^20.10.5",
+    "@types/node-fetch": "^2.6.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [],
+  "description": ""
+}
