@@ -20,9 +20,14 @@ jobs:
     steps:
       - name: Pause until approval
         id: pause
-        uses: styfle/wait-for-reviews-action@v1
+        uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const context = github.context;
+            const { owner, repo, run_id } = context;
+            const resp = await octokit.request('POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending-approval');
+            console.log(resp);
 
   DOCKERHUB:
     needs: [manual-approval]
@@ -44,3 +49,4 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dockerimagebuild:main
+
