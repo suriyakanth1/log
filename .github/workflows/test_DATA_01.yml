@@ -24,8 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { owner, repo, run_id } = github.context;
-            const resp = await octokit.request('POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending-approval');
+            const resp = await octokit.request('POST /repos/${{ github.repository.owner }}/${{ github.repository.repo }}/actions/runs/${{ github.run_id }}/pending-approval');
             console.log(resp);
 
   DOCKERHUB:
