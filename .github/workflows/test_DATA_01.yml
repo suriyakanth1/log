@@ -6,7 +6,7 @@ on:
       pause_workflow:
         description: 'Pause the workflow'
         required: false
-        default: 'false'
+        default: 'true'
 
 jobs:
   build:
