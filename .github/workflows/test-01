@@ -1,0 +1,40 @@
+name: Pause Workflow Example
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Manual trigger to resume the workflow
+
+jobs:
+  initial_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initial Job Step
+        run: echo "This is the initial job"
+
+  pause_workflow:
+    runs-on: ubuntu-latest
+    needs: initial_job
+    if: always()
+    steps:
+      - name: Pause Workflow
+        run: echo "::set-output name=pause::true"
+        id: pause
+
+  resume_workflow:
+    runs-on: ubuntu-latest
+    needs: initial_job
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Resume Workflow
+        run: echo "::set-output name=pause::false"
+        id: resume
+
+  subsequent_job:
+    runs-on: ubuntu-latest
+    needs: [initial_job, pause_workflow, resume_workflow]
+    if: ${{ steps.pause.outputs.pause != 'true' }}
+    steps:
+      - name: Subsequent Job Step
+        run: echo "This job runs only after the initial job completes and workflow is not paused"
