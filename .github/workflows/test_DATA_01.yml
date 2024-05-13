@@ -2,11 +2,7 @@ name: test_DATA_01
 
 on:
   workflow_dispatch:
-    inputs:
-      pause_workflow:
-        description: 'Pause the workflow'
-        required: false
-        default: 'true'
+  # You can add other events if needed
 
 jobs:
   build:
@@ -16,31 +12,21 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3  
 
-  check_pause:
+  # Manual approval job
+  manual-approval:
     runs-on: ubuntu-latest
-    if: github.event.inputs.pause_workflow == 'true'
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
     steps:
-      - name: Pause Workflow
-        run: echo "Workflow paused"
-
-  approval:
-    needs: [build, check_pause]
-    runs-on: ubuntu-latest
-    if: github.event.inputs.pause_workflow != 'true'
-    steps:
-      - name: Request Approval
-        id: approval
-        uses: "marvinpinto/action-automatic-approvals@v1"
+      - name: Pause until approval
+        id: pause
+        uses: styfle/wait-for-reviews-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          approvers: "username1,username2"  # Add the usernames of the approvers
-          comment: "Approve to proceed with DockerHub job"
-          wait_for: "comment"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   DOCKERHUB:
-    needs: [approval]
+    needs: [manual-approval]
     runs-on: ubuntu-latest
-    if: github.event.inputs.pause_workflow != 'true'
     environment:
       name: DEVELOPMENT
     steps:
