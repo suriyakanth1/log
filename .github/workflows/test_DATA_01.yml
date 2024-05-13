@@ -6,7 +6,7 @@ on:
       pause_workflow:
         description: 'Pause the workflow'
         required: false
-        default: 'true'
+        default: 'false'
 
 jobs:
   build:
@@ -16,10 +16,31 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3  
 
-  DOCKERHUB:
-    if: github.event.inputs.pause_workflow != 'true'
-    needs: [build]
+  check_pause:
     runs-on: ubuntu-latest
+    if: github.event.inputs.pause_workflow == 'true'
+    steps:
+      - name: Pause Workflow
+        run: echo "Workflow paused"
+
+  approval:
+    needs: [build, check_pause]
+    runs-on: ubuntu-latest
+    if: github.event.inputs.pause_workflow != 'true'
+    steps:
+      - name: Request Approval
+        id: approval
+        uses: "marvinpinto/action-automatic-approvals@v1"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          approvers: "username1,username2"  # Add the usernames of the approvers
+          comment: "Approve to proceed with DockerHub job"
+          wait_for: "comment"
+
+  DOCKERHUB:
+    needs: [approval]
+    runs-on: ubuntu-latest
+    if: github.event.inputs.pause_workflow != 'true'
     environment:
       name: DEVELOPMENT
     steps:
