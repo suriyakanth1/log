@@ -24,8 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const context = github.context;
-            const { owner, repo, run_id } = context;
+            const { owner, repo, run_id } = github.context;
             const resp = await octokit.request('POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending-approval');
             console.log(resp);
 
@@ -49,4 +48,3 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dockerimagebuild:main
-
