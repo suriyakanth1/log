@@ -1,6 +1,7 @@
 name: Pause Workflow Example
 
 on:
+  push:
   workflow_dispatch: # Manual trigger to resume the workflow
 
 jobs:
