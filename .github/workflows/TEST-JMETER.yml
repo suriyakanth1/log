@@ -13,25 +13,19 @@
                   uses: actions/checkout@v3  
             
 
-        #---------------- DOCKER
-          DOCKERHUB:
-           needs: [build]
-           runs-on: ubuntu-latest
-           environment:
-              name: DEVELOPMENT
-           steps:
-             - name: Checkout code
-               uses: actions/checkout@v2
-             - name: Set up Docker Buildx
-               uses: docker/setup-buildx-action@v3
-             - name: Login to Docker Hub
-               uses: docker/login-action@v2
-               with:
-                 username: suriyakanth1
-                 password: dckr_pat_LSDYW7uqWPPYvQOrLJFEbl7oPjM
-             - name: Build and push
-               uses: docker/build-push-action@v5
-               with:
-                  push: true
-                  tags: suriyakanth1/dockerimagebuild:main
+          JMETER:
+            needs: [build]
+            runs-on: ubuntu-latest
+            steps:
+              - name: Write Script Content to cicd.jmx
+                run: |
+                          sshpass -p ClearC0de20S4 ssh -o StrictHostKeyChecking=no root@158.220.107.63 'echo "testdata" > /root/projects/jmeter/cicd.jmx'
+          
+              - name: JMeter and Run Test
+                run: |
+                          sshpass -p ClearC0de20S4 ssh -o StrictHostKeyChecking=no root@158.220.107.63 << EOF
+                          cd /root/projects/jmeter/apache-jmeter-5.4.1/bin
+                          ./jmeter.sh -n -t /root/projects/jmeter/test.jmx -l /root/projects/jmeter/results.jtl
+                                  EOF
+
             
