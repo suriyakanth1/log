@@ -31,3 +31,7 @@ jobs:
         with:
           name: junit-report
           path: 'junit5-gradle-sample/build/reports/tests/test'  # Ensure this is the correct path for your test reports
+
+      - name: Report
+        uses: dorny/test-reporter@v1
+        if: always()
