@@ -1,37 +1,41 @@
-        name: JUNIT-GRADLE-11	
 
-        on:
-          workflow_dispatch:
+name: JUNIT-GRADLE-11
 
+on:
+  workflow_dispatch:  
 
-        jobs:
-          build:
-           name: GITHUB
-           runs-on: ubuntu-latest
-           steps:
-                - name: Check out the repo
-                  uses: actions/checkout@v3  
-            
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-        #---------------- DOCKER
-          DOCKERHUB:
-           needs: [build]
-           runs-on: ubuntu-latest
-           environment:
-              name: DEVELOPMENT
-           steps:
-             - name: Checkout code
-               uses: actions/checkout@v2
-             - name: Set up Docker Buildx
-               uses: docker/setup-buildx-action@v3
-             - name: Login to Docker Hub
-               uses: docker/login-action@v2
-               with:
-                 username: suriyakanth1
-                 password: dckr_pat_LSDYW7uqWPPYvQOrLJFEbl7oPjM
-             - name: Build and push
-               uses: docker/build-push-action@v5
-               with:
-                  push: true
-                  tags: suriyakanth1/dockerimagebuild:main
-            
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Install Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Run JUnit Tests
+        working-directory: Spring-Boot-main 
+        run: ./gradlew test
+
+      - name: Upload JUnit Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: junit-report
+          path: 'Spring-Boot-main/build/reports/tests/test'
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "Update test reports"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
