@@ -1,4 +1,3 @@
-
 name: JUNIT-GRADLE-11
 
 on:
@@ -21,21 +20,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Run JUnit Tests
-        working-directory: Spring-Boot-main 
+        working-directory: junit5-gradle-sample  # Ensure this is the correct directory for your project
         run: ./gradlew test
 
       - name: Upload JUnit Report
         uses: actions/upload-artifact@v2
         with:
           name: junit-report
-          path: 'Spring-Boot-main/build/reports/tests/test'
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m "Update test reports"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          path: 'junit5-gradle-sample/build/reports/tests/test'  # Ensure this is the correct path for your test reports
