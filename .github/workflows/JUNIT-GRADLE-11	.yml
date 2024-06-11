@@ -35,5 +35,8 @@ jobs:
       - name: Report
         uses: dorny/test-reporter@v1
         with:
-          name: JUnit Test Report  # Provide a name for the report
+          name: Gradle Tests
+          path: '**/build/test-results/test/TEST*.xml'
+          reporter: java-junit
+          fail-on-error: true
         if: always()
