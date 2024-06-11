@@ -19,6 +19,9 @@ jobs:
       - name: Install Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./junit5-gradle-sample/gradlew
+
       - name: Run JUnit Tests
         working-directory: junit5-gradle-sample  # Ensure this is the correct directory for your project
         run: ./gradlew test
