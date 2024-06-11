@@ -34,4 +34,6 @@ jobs:
 
       - name: Report
         uses: dorny/test-reporter@v1
+        with:
+          name: JUnit Test Report  # Provide a name for the report
         if: always()
