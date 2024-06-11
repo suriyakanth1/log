@@ -23,20 +23,22 @@ jobs:
         run: chmod +x ./junit5-gradle-sample/gradlew
 
       - name: Run JUnit Tests
-        working-directory: junit5-gradle-sample  # Ensure this is the correct directory for your project
+        working-directory: junit5-gradle-sample
         run: ./gradlew test
 
       - name: Upload JUnit Report
         uses: actions/upload-artifact@v2
         with:
           name: junit-report
-          path: 'junit5-gradle-sample/build/reports/tests/test'  # Ensure this is the correct path for your test reports
+          path: junit5-gradle-sample/build/reports/tests/test
 
       - name: Report
         uses: dorny/test-reporter@v1
         with:
           name: Gradle Tests
-          path: '**/build/test-results/test/TEST*.xml'
+          path: junit5-gradle-sample/test.txt
           reporter: java-junit
           fail-on-error: true
         if: always()
+        env:
+          GITHUB_TOKEN: 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
