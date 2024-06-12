@@ -24,10 +24,3 @@ jobs:
         working-directory: java-junit-template-project-master
         run: ant clean test
         
-      - name: Upload JUnit Report and Summary
-        uses: actions/upload-artifact@v2
-        with:
-          name: junit-report
-          path: |
-           ./build/test-results
-           ./build/junit
