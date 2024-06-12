@@ -21,11 +21,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ant
 
       - name: Run Ant Build
-        working-directory: .  # Assuming build.xml is in the root directory of the repository
+        working-directory: java-junit-template-project-master  # Ensure this is the correct directory for your project
         run: ant clean test
 
       - name: Generate Test Summary Report
-        working-directory: .  # Assuming build.xml is in the root directory of the repository
+        working-directory: java-junit-template-project-master  # Ensure this is the correct directory for your project
         run: ant junitreport
 
       - name: Upload JUnit Report and Summary
