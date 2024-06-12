@@ -1,37 +1,30 @@
-        name: JUNIT-ANT-1	
+name: JUNIT-ANT-1
 
-        on:
-          workflow_dispatch:
+on:
+  workflow_dispatch:
 
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-        jobs:
-          build:
-           name: GITHUB
-           runs-on: ubuntu-latest
-           steps:
-                - name: Check out the repo
-                  uses: actions/checkout@v3  
-            
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
 
-        #---------------- DOCKER
-          DOCKERHUB:
-           needs: [build]
-           runs-on: ubuntu-latest
-           environment:
-              name: DEVELOPMENT
-           steps:
-             - name: Checkout code
-               uses: actions/checkout@v2
-             - name: Set up Docker Buildx
-               uses: docker/setup-buildx-action@v3
-             - name: Login to Docker Hub
-               uses: docker/login-action@v2
-               with:
-                 username: suriyakanth1
-                 password: dckr_pat_LSDYW7uqWPPYvQOrLJFEbl7oPjM
-             - name: Build and push
-               uses: docker/build-push-action@v5
-               with:
-                  push: true
-                  tags: suriyakanth1/dockerimagebuild:main
-            
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      - name: Run Ant Build
+        working-directory:./java-junit-template-project-master  # Ensure this is the correct directory for your project
+        run: ant clean test
+
+      - name: Upload JUnit Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: junit-report
+          path:./java-junit-template-project-master/build/test-results  # Ensure this is the correct path for your test reports
