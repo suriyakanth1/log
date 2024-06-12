@@ -20,11 +20,17 @@ jobs:
         run: sudo apt-get install -y ant
 
       - name: Run Ant Build
-        working-directory: java-junit-template-project-master  # Ensure this is the correct directory for your project
+        working-directory: java-junit-template-project-master
         run: ant clean test
 
-      - name: Upload JUnit Report
+      - name: Generate Test Summary Report
+        working-directory: java-junit-template-project-master
+        run: ant generate-test-report
+
+      - name: Upload JUnit Report and Summary
         uses: actions/upload-artifact@v2
         with:
           name: junit-report
-          path: java-junit-template-project-master/build/test-results  # Ensure this is the correct path for your test reports
+          path: |
+            java-junit-template-project-master/build/test-results
+            java-junit-template-project-master/build/test-summary-report.txt
