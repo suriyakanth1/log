@@ -1,7 +1,7 @@
 name: JUNIT-11
 
 on:
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   run-tests:
@@ -16,18 +16,15 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
 
-      - name: Install Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Install Ant
+        run: sudo apt-get install -y ant
 
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x ./junit5-gradle-sample/gradlew
-
-      - name: Run JUnit Tests
-        working-directory: junit5-gradle-sample  # Ensure this is the correct directory for your project
-        run: ./gradlew test
+      - name: Run Ant Build
+        working-directory: java-junit-template-project-master  # Ensure this is the correct directory for your project
+        run: ant clean test
 
       - name: Upload JUnit Report
         uses: actions/upload-artifact@v2
         with:
           name: junit-report
-          path: 'junit5-gradle-sample/build/reports/tests/test'  # Ensure this is the correct path for your test reports
+          path: java-junit-template-project-master/build/test-results  # Ensure this is the correct path for your test reports
