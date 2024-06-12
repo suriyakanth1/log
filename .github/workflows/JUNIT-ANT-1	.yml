@@ -23,11 +23,7 @@ jobs:
       - name: Run Ant Build
         working-directory: java-junit-template-project-master
         run: ant clean test
-
-      - name: Generate Test Summary Report
-        working-directory: java-junit-template-project-master
-        run: ant junitreport
-
+        
       - name: Upload JUnit Report and Summary
         uses: actions/upload-artifact@v2
         with:
