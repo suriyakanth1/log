@@ -17,20 +17,20 @@ jobs:
           java-version: '17'
 
       - name: Install Ant
-        run: sudo apt-get install -y ant
+        run: sudo apt-get update && sudo apt-get install -y ant
 
       - name: Run Ant Build
-        working-directory: java-junit-template-project-master
+          working-directory:./java-junit-template-project-master
         run: ant clean test
 
       - name: Generate Test Summary Report
-        working-directory: java-junit-template-project-master
-        run: ant generate-test-report
+          working-directory:./java-junit-template-project-master
+        run: ant junitreport
 
       - name: Upload JUnit Report and Summary
         uses: actions/upload-artifact@v2
         with:
           name: junit-report
           path: |
-            java-junit-template-project-master/build/test-results
-            java-junit-template-project-master/build/test-summary-report.txt
+           ./java-junit-template-project-master/build/test-results
+           ./java-junit-template-project-master/build/junit
