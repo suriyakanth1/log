@@ -32,13 +32,3 @@ jobs:
           name: junit-report
           path: junit5-gradle-sample/build/reports/tests/test
 
-      - name: Report
-        uses: dorny/test-reporter@v1
-        with:
-          name: Gradle Tests
-          path: junit5-gradle-sample/test.txt
-          reporter: java-junit
-          fail-on-error: true
-        if: always()
-        env:
-          GITHUB_TOKEN: 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
