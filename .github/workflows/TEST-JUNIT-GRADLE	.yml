@@ -25,9 +25,3 @@ jobs:
       - name: Run JUnit Tests
         working-directory: junit5-gradle-sample
         run: ./gradlew test
-
-      - name: Upload JUnit Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: junit-report
-          path: junit5-gradle-sample/build/reports/tests/test
