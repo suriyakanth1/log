@@ -1,41 +1,34 @@
-        name: TEST-JMETER
+name: JMETER-20
 
-        on:
-          workflow_dispatch:
+on:
+  workflow_dispatch:
 
+jobs:
+  build:
+    name: GITHUB
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3  
 
-        jobs:
-          build:
-           name: GITHUB
-           runs-on: ubuntu-latest
-           steps:
-                - name: Check out the repo
-                  uses: actions/checkout@v3  
-            
+  JMETER:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Transfer JMX File to Remote Server
+        run: |
+          # Install sshpass
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+          # Transfer the JMX file to the remote server
+          sshpass -p ClearC0de20S4 scp -o StrictHostKeyChecking=no ./sample.jmx root@158.220.107.63:/root/projects/jmeter/sample.jmx
 
-          JMETER:
-                  needs: [build]
-                  runs-on: ubuntu-latest
-                  steps:
-                    - name: Checkout Repository
-                      uses: actions/checkout@v2
-      
-                    - name: Transfer JMX File Content to Remote Server
-                      run: |
-                        # Read the content of sample.jmx
-                        content=$(cat ./sample.jmx)
-                        # Escape double quotes and special characters in the content
-                        content=$(echo "$content" | sed 's/"/\\"/g')
-                        # Transfer the content to the remote server
-                        sshpass -p ClearC0de20S4 ssh -o StrictHostKeyChecking=no root@158.220.107.63 "echo \"$content\" > /root/projects/jmeter/sample.jmx"
-
-                    - name: JMeter and Run Test
-                      run: |
-                        sshpass -p ClearC0de20S4 ssh -o StrictHostKeyChecking=no root@158.220.107.63 << EOF
-                        cd /root/projects/jmeter/apache-jmeter-5.4.1/bin
-                        ./jmeter.sh -n -t /root/projects/jmeter/sample.jmx -l /root/projects/jmeter/results.jtl
-                        EOF
-
-
-
-            
+      - name: JMeter and Run Test
+        run: |
+          sshpass -p ClearC0de20S4 ssh -o StrictHostKeyChecking=no root@158.220.107.63 << 'EOF'
+          cd /root/projects/jmeter/apache-jmeter-5.4.1/bin
+          ./jmeter.sh -n -t /root/projects/jmeter/sample.jmx -l /root/projects/jmeter/results.jtl
+          EOF
